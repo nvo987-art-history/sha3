@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SHA3 GENERATOR</title>
+
+<!-- JSZip (MIT) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- js-sha3 (MIT) -->
+<script src="https://cdn.jsdelivr.net/npm/js-sha3@0.9.2/src/sha3.min.js"></script>
+
+<style>
+body{
+    margin:0;
+    background:#050505;
+    font-family:monospace;
+    color:#00e6a8;
+    text-align:center;
+}
+
+h1{
+    margin-top:40px;
+    font-size:28px;
+    text-shadow:0 0 4px #00e6a8;
+}
+
+.info{
+    margin-top:10px;
+    font-size:13px;
+    line-height:1.6;
+    max-width:700px;
+    margin-left:auto;
+    margin-right:auto;
+    color:#7fffd4;
+}
+
+textarea{
+    width:85%;
+    max-width:600px;
+    height:120px;
+    padding:14px;
+    background:#000;
+    border:1px solid #00b386;
+    color:#ccfff5;
+    margin-top:25px;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 25px;
+    background:#007a5a;
+    color:#fff;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.2s;
+}
+
+button:hover{
+    background:#00b386;
+}
+
+#result{
+    margin:30px auto;
+    width:85%;
+    max-width:700px;
+    padding:20px;
+    border:1px solid #00b386;
+    background:#000;
+}
+
+.ok{ color:#00ff9c; }
+.err{ color:#ff4d6d; }
+
+footer{
+    margin-top:60px;
+    margin-bottom:30px;
+    font-size:12px;
+    opacity:0.6;
+    max-width:700px;
+    margin-left:auto;
+    margin-right:auto;
+    color:#66ffe0;
+}
+</style>
+</head>
+
+<body>
+
+<h1>SHA3 GENERATOR</h1>
+
+<div class="info">
+INPUT: Text or File<br>
+FEATURES: SHA3-256 hashing, ZIP export<br><br>
+
+<b>INFO:</b><br>
+All processing is performed locally in your browser.<br>
+No input data is transmitted, stored, or shared.<br><br>
+
+<b>PRIVACY:</b><br>
+This tool does not collect personal data and does not use cookies or tracking.<br><br>
+
+<b>NOTICE:</b><br>
+This tool uses third-party open-source libraries distributed under the MIT License:<br>
+- js-sha3 (© Chen, Yi-Cyuan)<br>
+- JSZip (© Stuart Knightley)<br>
+Libraries are loaded via public CDN providers (cdnjs, jsDelivr).<br><br>
+
+<b>DISCLAIMER:</b><br>
+This tool is provided "as is", without warranty of any kind.<br>
+Users are responsible for the data they process.<br>
+Do not use confidential or copyrighted material without permission.
+</div>
+
+<textarea id="text" placeholder="Enter text (optional)"></textarea>
+
+<br>
+
+<input type="file" id="file" hidden>
+
+<button onclick="document.getElementById('file').click()">
+SELECT FILE
+</button>
+
+<div id="filename"></div>
+
+<br>
+
+<button onclick="generate()">GENERATE</button>
+
+<div id="result"></div>
+
+<footer>
+© 2026 — NVO987<br>
+SHA3 Utility Tool<br><br>
+
+Open Source Licenses:<br>
+MIT License: https://opensource.org/licenses/MIT
+</footer>
+
+<script>
+
+let currentHash = "";
+let currentContent = "";
+let currentFileName = "";
+
+/* FILE SELECT */
+document.getElementById("file").addEventListener("change", e=>{
+    const file = e.target.files[0];
+
+    if(file && file.size > 50 * 1024 * 1024){
+        alert("File too large (max 50MB)");
+        e.target.value = "";
+        return;
+    }
+
+    document.getElementById("filename").innerText = file ? file.name : "";
+});
+
+/* TEXT HASH */
+function sha3Text(text){
+    return sha3_256(text);
+}
+
+/* FILE HASH */
+async function sha3File(file){
+    const buffer = await file.arrayBuffer();
+    return sha3_256(new Uint8Array(buffer));
+}
+
+/* GENERATE */
+async function generate(){
+
+    const text = document.getElementById("text").value.trim();
+    const file = document.getElementById("file").files[0];
+    const result = document.getElementById("result");
+
+    if(!text && !file){
+        result.innerHTML = "<div class='err'>No input provided</div>";
+        return;
+    }
+
+    result.innerHTML = "Processing...";
+
+    let hash = "";
+
+    if(file){
+        currentFileName = file.name;
+        hash = await sha3File(file);
+        currentContent = "[binary file]";
+    }else{
+        currentFileName = "input.txt";
+        currentContent = text;
+        hash = sha3Text(text);
+    }
+
+    currentHash = hash;
+
+    result.innerHTML = `
+        <div class="ok">✔ SHA3-256 generated</div>
+        <div style="background:#111;padding:12px;margin-top:10px;word-break:break-all;">
+            ${hash}
+        </div>
+        <button onclick="copyHash()">COPY HASH</button>
+        <button onclick="downloadZIP()">DOWNLOAD ZIP</button>
+    `;
+}
+
+/* COPY */
+function copyHash(){
+    navigator.clipboard.writeText(currentHash);
+}
+
+/* ZIP */
+async function downloadZIP(){
+
+    const zip = new JSZip();
+
+    zip.file("sha3.txt", currentHash);
+    zip.file(currentFileName, currentContent);
+
+    const blob = await zip.generateAsync({type:"blob"});
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "sha3_bundle.zip";
+    a.click();
+
+    URL.revokeObjectURL(a.href);
+}
+
+</script>
+
+</body>
+</html>
