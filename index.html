@@ -1,55 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+    <head>
 
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SHA3 Generator | Local SHA3-256 Hash Utility</title>
+<title>SHA3 Generator | Local SHA3-256 Hash Utility | NVO987</title>
 
-<meta name="description"
-content="NVO987 is a multidisciplinary artistic and cultural initiative exploring the intersections of visual culture and art history.Generate SHA3-256 hashes locally in your browser. Hash text or files and export verification bundles without uploading data.">
+<meta name="description" content="NVO987 is a multidisciplinary artistic and cultural initiative exploring the intersections of visual culture and art history. SHA3 Generator is a browser-based utility for generating SHA3-256 hashes locally. Hash text or files, verify integrity, and export verification bundles without uploading or transmitting data.">
 
-<meta name="keywords"
-content="SHA3,SHA3-256,Hash Generator,Checksum,Cryptography,Integrity Verification">
+<meta name="keywords" content="NVO987,SHA3,SHA3-256,Hash Generator,Checksum,Cryptography,Integrity Verification,Web Cryptography,File Hash,Text Hash,Digital Integrity,Verification Tool,Browser Security">
 
-<meta name="author"
-content="NVO987">
+<meta name="author" content="Nicholas Van-Orton">
+<meta name="creator" content="Nicholas Van-Orton">
 
-<meta name="robots"
-content="index,follow">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 
-<meta name="theme-color"
-content="#050505">
+<meta name="theme-color" content="#050505">
+<meta name="color-scheme" content="dark">
 
-<meta property="og:type"
-content="website">
+<link rel="canonical" href="https://sha3.nvo987.us/">
 
-<meta property="og:title"
-content="SHA3 Generator">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="me" href="https://identity.nvo987.us">
 
-<meta property="og:description"
-content="Local SHA3-256 hashing utility. Browser-side processing only.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NVO987">
+<meta property="og:title" content="SHA3 Generator | Local SHA3-256 Hash Utility">
+<meta property="og:description" content="Generate SHA3-256 hashes locally in your browser. No uploads, no tracking, browser-side processing only.">
+<meta property="og:url" content="https://sha3.nvo987.us/">
+<meta property="og:locale" content="en_US">
 
-<meta property="og:locale"
-content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SHA3 Generator">
+<meta name="twitter:description" content="Browser-based SHA3-256 hashing utility for local integrity verification.">
 
-<meta name="twitter:card"
-content="summary">
+<meta name="did" content="did:web:identity.nvo987.us">
+<meta name="machine-readable" content="true">
+<meta name="ai-compatible" content="true">
+<meta name="semantic-layer" content="enabled">
 
-<meta name="twitter:title"
-content="SHA3 Generator">
-
-<meta name="twitter:description"
-content="Generate SHA3-256 hashes locally in your browser.">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"Person",
+      "@id":"https://identity.nvo987.us/#person",
+      "name":"Nicholas Van-Orton",
+      "identifier":"did:web:identity.nvo987.us",
+      "url":"https://identity.nvo987.us"
+    },
+    {
+      "@type":"Organization",
+      "@id":"https://nvo987.us/#organization",
+      "name":"NVO987",
+      "url":"https://nvo987.us"
+    },
+    {
+      "@type":"WebApplication",
+      "@id":"https://sha3.nvo987.us/#application",
+      "name":"SHA3 Generator",
+      "applicationCategory":"SecurityApplication",
+      "operatingSystem":"Web Browser",
+      "browserRequirements":"JavaScript Enabled",
+      "url":"https://sha3.nvo987.us/",
+      "description":"Browser-based SHA3-256 hashing utility for generating cryptographic hashes locally without transmitting user data.",
+      "author":{
+        "@id":"https://identity.nvo987.us/#person"
+      },
+      "creator":{
+        "@id":"https://identity.nvo987.us/#person"
+      },
+      "publisher":{
+        "@id":"https://nvo987.us/#organization"
+      },
+      "featureList":[
+        "SHA3-256 hashing",
+        "Local browser processing",
+        "Text hashing",
+        "File hashing",
+        "ZIP export",
+        "Manifest generation",
+        "No data upload"
+      ],
+      "inLanguage":"en"
+    },
+    {
+      "@type":"WebSite",
+      "@id":"https://sha3.nvo987.us/#website",
+      "url":"https://sha3.nvo987.us/",
+      "name":"SHA3 Generator",
+      "publisher":{
+        "@id":"https://nvo987.us/#organization"
+      }
+    }
+  ]
+}
+</script>
 
 <!-- JSZip -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <!-- js-sha3 -->
 <script src="https://cdn.jsdelivr.net/npm/js-sha3@0.9.2/src/sha3.min.js"></script>
+    
 
 <style>
 
