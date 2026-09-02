@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SHA3 Generator | Local SHA3-256 Hash Utility | NVO987 | Nicholas Van-Orton</title>
+
+    <meta name="description" content="NVO987 is a multidisciplinary artistic and cultural initiative exploring the intersections of visual culture and art history. SHA3 Generator is a browser-based utility for generating SHA3-256 hashes locally. Hash text or files, verify integrity, and export verification bundles without uploading or transmitting data.">
+
+    <meta name="keywords" content="NVO987,SHA3,SHA3-256,Hash Generator,Checksum,Cryptography,Integrity Verification,Web Cryptography,File Hash,Text Hash,Digital Integrity,Verification Tool,Browser Security">
+
+    <meta name="author" content="Nicholas Van-Orton">
+    <meta name="creator" content="Nicholas Van-Orton">
+
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+
+    <meta name="theme-color" content="#171716">
+    <meta name="color-scheme" content="light">
+
+    <link rel="canonical" href="https://sha3.nvo987.us/">
+    <link rel="me" href="https://identity.nvo987.us">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="NVO987">
+    <meta property="og:title" content="SHA3 Generator | Local SHA3-256 Hash Utility">
+    <meta property="og:description" content="Generate SHA3-256 hashes locally in your browser. No uploads, no tracking, browser-side processing only.">
+    <meta property="og:url" content="https://sha3.nvo987.us/">
+    <meta property="og:locale" content="en_US">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="SHA3 Generator">
+    <meta name="twitter:description" content="Browser-based SHA3-256 hashing utility for local integrity verification.">
+
+    <meta name="did" content="did:web:identity.nvo987.us">
+    <meta name="machine-readable" content="true">
+    <meta name="ai-compatible" content="true">
+    <meta name="semantic-layer" content="enabled">
+
+    <link rel="alternate" type="application/did+json" href="https://identity.nvo987.us/.well-known/did.json">
+    <link rel="alternate" type="application/did+ld+json" href="https://identity.nvo987.us/.well-known/did-configuration.json">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Playfair+Display:opsz,wght@5..120,500;5..120,600;5..120,700&display=swap" rel="stylesheet">
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha3@0.9.2/src/sha3.min.js"></script>
+
+    <style>
+        :root {
+            --ink: #171716;
+            --ink-soft: #4f504d;
+            --paper: #f3f0e9;
+            --paper-deep: #e9e4da;
+            --surface: #fbfaf7;
+            --line: rgba(23, 23, 22, 0.14);
+            --line-strong: rgba(23, 23, 22, 0.28);
+            --accent: #9a7148;
+            --accent-dark: #76522f;
+            --success: #2d6b58;
+            --danger: #a0443f;
+
+            --serif: "Playfair Display", Georgia, serif;
+            --sans: "Inter", Arial, sans-serif;
+            --mono: "DM Mono", monospace;
+
+            --container: 1180px;
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-width: 320px;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(154, 113, 72, 0.10),
+                    transparent 30rem
+                ),
+                var(--paper);
+            color: var(--ink);
+            font-family: var(--sans);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        button,
+        textarea,
+        input {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+        }
+
+        .site-shell {
+            width: min(calc(100% - 32px), var(--container));
+            margin: 0 auto;
+        }
+
+        /* -------------------------------------------------
+           Header
+        ------------------------------------------------- */
+
+        .site-header {
+            padding: 24px 0 0;
+        }
+
+        .masthead {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 46px;
+            height: 46px;
+            border: 1px solid var(--ink);
+            border-radius: 50%;
+            font-family: var(--serif);
+            font-size: 14px;
+            letter-spacing: 0.04em;
+        }
+
+        .brand-text {
+            display: grid;
+            gap: 2px;
+        }
+
+        .brand-name {
+            font-family: var(--serif);
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .brand-subtitle {
+            color: var(--ink-soft);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--ink-soft);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 5px rgba(45, 107, 88, 0.10);
+        }
+
+        /* -------------------------------------------------
+           Hero
+        ------------------------------------------------- */
+
+        .hero {
+            padding: clamp(64px, 10vw, 128px) 0 clamp(52px, 8vw, 96px);
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 22px;
+            color: var(--accent-dark);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 36px;
+            height: 1px;
+            background: currentColor;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.5fr);
+            gap: clamp(32px, 8vw, 96px);
+            align-items: end;
+        }
+
+        .hero-title {
+            max-width: 900px;
+            margin: 0;
+            font-family: var(--serif);
+            font-size: clamp(3.5rem, 9vw, 8.5rem);
+            font-weight: 500;
+            letter-spacing: -0.055em;
+            line-height: 0.88;
+        }
+
+        .hero-title span {
+            display: block;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .hero-intro {
+            max-width: 370px;
+            margin: 0 0 8px;
+            color: var(--ink-soft);
+            font-size: 0.98rem;
+            line-height: 1.8;
+        }
+
+        /* -------------------------------------------------
+           Utility
+        ------------------------------------------------- */
+
+        .utility {
+            padding-bottom: clamp(70px, 10vw, 130px);
+        }
+
+        .utility-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 330px;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .workspace {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(23, 23, 22, 0.07);
+        }
+
+        .workspace-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 22px 26px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .workspace-title {
+            margin: 0;
+            font-family: var(--serif);
+            font-size: 1.45rem;
+            font-weight: 600;
+        }
+
+        .workspace-label {
+            color: var(--ink-soft);
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+        }
+
+        .workspace-body {
+            padding: clamp(20px, 4vw, 42px);
+        }
+
+        .field-label {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .field-label span:last-child {
+            color: var(--ink-soft);
+            font-weight: 500;
+        }
+
+        textarea {
+            display: block;
+            width: 100%;
+            min-height: 230px;
+            padding: 20px;
+            resize: vertical;
+            border: 1px solid var(--line-strong);
+            border-radius: var(--radius-md);
+            outline: none;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            transition:
+                border-color 180ms ease,
+                box-shadow 180ms ease,
+                background 180ms ease;
+        }
+
+        textarea::placeholder {
+            color: #92918d;
+        }
+
+        textarea:focus {
+            border-color: var(--accent);
+            background: #fffdf9;
+            box-shadow: 0 0 0 4px rgba(154, 113, 72, 0.10);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 26px 0;
+            color: var(--ink-soft);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+
+        .file-panel {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px;
+            border: 1px dashed var(--line-strong);
+            border-radius: var(--radius-md);
+            background: rgba(243, 240, 233, 0.55);
+        }
+
+        .file-copy {
+            min-width: 0;
+        }
+
+        .file-copy strong {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 0.92rem;
+        }
+
+        .file-copy span,
+        #filename {
+            display: block;
+            overflow: hidden;
+            color: var(--ink-soft);
+            font-size: 0.8rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #filename:not(:empty) {
+            margin-top: 6px;
+            color: var(--accent-dark);
+            font-family: var(--mono);
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 28px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 20px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition:
+                transform 180ms ease,
+                background 180ms ease,
+                color 180ms ease,
+                border-color 180ms ease,
+                box-shadow 180ms ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button-primary {
+            background: var(--ink);
+            color: #fff;
+            box-shadow: 0 10px 24px rgba(23, 23, 22, 0.14);
+        }
+
+        .button-primary:hover {
+            background: var(--accent-dark);
+        }
+
+        .button-secondary {
+            border: 1px solid var(--line-strong);
+            background: transparent;
+            color: var(--ink);
+        }
+
+        .button-secondary:hover {
+            border-color: var(--ink);
+            background: var(--paper);
+        }
+
+        .result {
+            min-height: 76px;
+            margin-top: 30px;
+        }
+
+        .result-card {
+            padding: 24px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            background: var(--paper);
+            animation: reveal 320ms ease both;
+        }
+
+        .result-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            color: var(--success);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .result-status::before {
+            content: "✓";
+            display: grid;
+            place-items: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(45, 107, 88, 0.12);
+        }
+
+        .hashbox {
+            padding: 18px;
+            overflow-wrap: anywhere;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: var(--ink);
+            color: #e8e2d7;
+            font-family: var(--mono);
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            line-height: 1.7;
+        }
+
+        .result-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .result-actions .button {
+            min-height: 44px;
+        }
+
+        .result-processing {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            color: var(--ink-soft);
+            font-size: 0.88rem;
+        }
+
+        .result-processing::before {
+            content: "";
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--line-strong);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 700ms linear infinite;
+        }
+
+        .err {
+            padding: 18px 20px;
+            border-left: 3px solid var(--danger);
+            border-radius: var(--radius-sm);
+            background: rgba(160, 68, 63, 0.07);
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        /* -------------------------------------------------
+           Information Panel
+        ------------------------------------------------- */
+
+        .information {
+            position: sticky;
+            top: 24px;
+            padding: 30px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: rgba(251, 250, 247, 0.62);
+            backdrop-filter: blur(14px);
+        }
+
+        .information h2 {
+            margin: 0 0 22px;
+            font-family: var(--serif);
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1.05;
+        }
+
+        .info-list {
+            display: grid;
+            gap: 0;
+            margin: 0;
+        }
+
+        .info-item {
+            padding: 20px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .info-item:first-child {
+            padding-top: 0;
+            border-top: 0;
+        }
+
+        .info-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .info-item dt {
+            margin-bottom: 7px;
+            color: var(--accent-dark);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .info-item dd {
+            margin: 0;
+            color: var(--ink-soft);
+            font-size: 0.86rem;
+            line-height: 1.75;
+        }
+
+        .license-note {
+            margin-top: 24px;
+            padding-top: 22px;
+            border-top: 1px solid var(--line);
+            color: var(--ink-soft);
+            font-size: 0.75rem;
+            line-height: 1.7;
+        }
+
+        /* -------------------------------------------------
+           Footer
+        ------------------------------------------------- */
+
+        footer {
+            padding: 28px 0 40px;
+            border-top: 1px solid var(--line);
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .footer-brand {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .footer-meta {
+            color: var(--ink-soft);
+            font-size: 0.75rem;
+            line-height: 1.7;
+            text-align: right;
+        }
+
+        /* -------------------------------------------------
+           Motion
+        ------------------------------------------------- */
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes reveal {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* -------------------------------------------------
+           Responsive
+        ------------------------------------------------- */
+
+        @media (max-width: 900px) {
+            .hero-grid,
+            .utility-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .information {
+                position: static;
+            }
+
+            .hero-intro {
+                max-width: 620px;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .site-shell {
+                width: min(calc(100% - 24px), var(--container));
+            }
+
+            .site-header {
+                padding-top: 16px;
+            }
+
+            .masthead {
+                align-items: flex-start;
+            }
+
+            .status-indicator {
+                display: none;
+            }
+
+            .brand-mark {
+                width: 40px;
+                height: 40px;
+                font-size: 12px;
+            }
+
+            .brand-subtitle {
+                font-size: 0.62rem;
+            }
+
+            .hero {
+                padding-top: 64px;
+            }
+
+            .hero-title {
+                font-size: clamp(3.1rem, 17vw, 5rem);
+            }
+
+            .workspace-header {
+                padding: 18px;
+            }
+
+            .workspace-body {
+                padding: 18px;
+            }
+
+            .file-panel {
+                align-items: stretch;
+            }
+
+            .file-panel .button {
+                width: 100%;
+            }
+
+            .button-row .button {
+                width: 100%;
+            }
+
+            .result-actions .button {
+                width: 100%;
+            }
+
+            .information {
+                padding: 24px;
+            }
+
+            .footer-meta {
+                text-align: left;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="site-shell">
+
+        <header class="site-header">
+            <div class="masthead">
+                <a class="brand" href="/" aria-label="NVO987 SHA3 Generator home">
+                    <div class="brand-mark">NVO</div>
+
+                    <div class="brand-text">
+                        <span class="brand-name">NVO987</span>
+                        <span class="brand-subtitle">Digital Integrity</span>
+                    </div>
+                </a>
+
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    Local Processing
+                </div>
+            </div>
+        </header>
+
+        <main>
+
+            <section class="hero" aria-labelledby="page-title">
+                <p class="eyebrow">Local Cryptographic Utility</p>
+
+                <div class="hero-grid">
+                    <div>
+                        <h1 class="hero-title" id="page-title">
+                            SHA3
+                            <span>Generator</span>
+                        </h1>
+                    </div>
+
+                    <p class="hero-intro">
+                        A browser-based SHA3-256 utility for generating,
+                        verifying, and preserving digital integrity without
+                        transmitting your data.
+                    </p>
+                </div>
+            </section>
+
+            <section class="utility" aria-label="SHA3 utility">
+
+                <div class="utility-grid">
+
+                    <div class="workspace">
+
+                        <div class="workspace-header">
+                            <h2 class="workspace-title">Create a SHA3-256 hash</h2>
+
+                            <span class="workspace-label">
+                                SHA3-256 / LOCAL
+                            </span>
+                        </div>
+
+                        <div class="workspace-body">
+
+                            <label class="field-label" for="text">
+                                <span>Text input</span>
+                                <span>Optional</span>
+                            </label>
+
+                            <textarea
+                                id="text"
+                                placeholder="Enter text to generate a SHA3-256 hash..."
+                            ></textarea>
+
+                            <div class="divider">
+                                or
+                            </div>
+
+                            <input
+                                type="file"
+                                id="file"
+                                hidden
+                            >
+
+                            <div class="file-panel">
+                                <div class="file-copy">
+                                    <strong>Select a file</strong>
+
+                                    <span>
+                                        Maximum file size: 50 MB
+                                    </span>
+
+                                    <div id="filename" aria-live="polite"></div>
+                                </div>
+
+                                <button
+                                    class="button button-secondary"
+                                    type="button"
+                                    onclick="document.getElementById('file').click()"
+                                >
+                                    Choose file
+                                </button>
+                            </div>
+
+                            <div class="button-row">
+                                <button
+                                    class="button button-primary"
+                                    type="button"
+                                    onclick="generate()"
+                                >
+                                    Generate hash
+                                </button>
+
+                                <button
+                                    class="button button-secondary"
+                                    type="button"
+                                    onclick="resetTool()"
+                                >
+                                    New input
+                                </button>
+                            </div>
+
+                            <div
+                                id="result"
+                                class="result"
+                                aria-live="polite"
+                            ></div>
+
+                        </div>
+                    </div>
+
+                    <aside class="information">
+
+                        <h2>Private by design.</h2>
+
+                        <dl class="info-list">
+
+                            <div class="info-item">
+                                <dt>Input</dt>
+
+                                <dd>
+                                    Text or file
+                                </dd>
+                            </div>
+
+                            <div class="info-item">
+                                <dt>Features</dt>
+
+                                <dd>
+                                    SHA3-256 hashing, ZIP export,
+                                    and manifest generation.
+                                </dd>
+                            </div>
+
+                            <div class="info-item">
+                                <dt>Privacy</dt>
+
+                                <dd>
+                                    All processing is performed locally
+                                    in your browser. No input data is
+                                    transmitted, uploaded, stored,
+                                    or shared.
+                                </dd>
+                            </div>
+
+                            <div class="info-item">
+                                <dt>Data Collection</dt>
+
+                                <dd>
+                                    This tool does not collect personal
+                                    data and does not use cookies or
+                                    tracking technologies.
+                                </dd>
+                            </div>
+
+                            <div class="info-item">
+                                <dt>Libraries</dt>
+
+                                <dd>
+                                    This utility uses js-sha3
+                                    (© Chen, Yi-Cyuan) and JSZip
+                                    (© Stuart Knightley), distributed
+                                    under the MIT License.
+                                </dd>
+                            </div>
+
+                            <div class="info-item">
+                                <dt>Notice</dt>
+
+                                <dd>
+                                    Libraries are loaded from public
+                                    CDN providers.
+                                </dd>
+                            </div>
+
+                            <div class="info-item">
+                                <dt>Disclaimer</dt>
+
+                                <dd>
+                                    This software is provided “AS IS”
+                                    without warranty of any kind.
+                                    Users are responsible for all data
+                                    processed using this utility.
+                                </dd>
+                            </div>
+
+                        </dl>
+
+                        <div class="license-note">
+                            Open Source Licenses<br>
+                            <strong>MIT License</strong>
+                        </div>
+
+                    </aside>
+
+                </div>
+
+            </section>
+
+        </main>
+
+        <footer>
+            <div class="footer-inner">
+
+                <div>
+                    <div class="footer-brand">NVO987</div>
+                </div>
+
+                <div class="footer-meta">
+                    © 2026 — NVO987<br>
+                    SHA3 Utility Tool
+                </div>
+
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        let currentHash = "";
+        let currentContent = "";
+        let currentFileName = "";
+        let currentFile = null;
+
+        /* FILE SELECT */
+
+        document.getElementById("file").addEventListener("change", e => {
+            const file = e.target.files[0];
+
+            document.getElementById("result").innerHTML = "";
+
+            if (file && file.size > 50 * 1024 * 1024) {
+                alert("File too large (max 50 MB)");
+                e.target.value = "";
+                return;
+            }
+
+            document.getElementById("filename").innerText =
+                file ? file.name : "";
+        });
+
+        /* SHA3 TEXT */
+
+        function sha3Text(text) {
+            return sha3_256(text);
+        }
+
+        /* SHA3 FILE */
+
+        async function sha3File(file) {
+            const buffer = await file.arrayBuffer();
+
+            return sha3_256(
+                new Uint8Array(buffer)
+            );
+        }
+
+        /* GENERATE */
+
+        async function generate() {
+
+            const text =
+                document.getElementById("text")
+                    .value
+                    .trim();
+
+            const file =
+                document.getElementById("file")
+                    .files[0];
+
+            const result =
+                document.getElementById("result");
+
+            if (!text && !file) {
+                result.innerHTML =
+                    "<div class='err'>No input provided. Please enter text or select a file.</div>";
+
+                return;
+            }
+
+            result.innerHTML =
+                "<div class='result-processing'>Processing locally...</div>";
+
+            let hash = "";
+
+            try {
+
+                if (file) {
+
+                    currentFile = file;
+                    currentFileName = file.name;
+
+                    hash = await sha3File(file);
+
+                } else {
+
+                    currentFile = null;
+                    currentFileName = "input.txt";
+                    currentContent = text;
+
+                    hash = sha3Text(text);
+                }
+
+                currentHash = hash;
+
+                result.innerHTML = `
+                    <div class="result-card">
+
+                        <div class="result-status">
+                            SHA3-256 generated
+                        </div>
+
+                        <div class="hashbox">
+                            ${hash}
+                        </div>
+
+                        <div class="result-actions">
+
+                            <button
+                                class="button button-secondary"
+                                type="button"
+                                onclick="copyHash()"
+                            >
+                                Copy hash
+                            </button>
+
+                            <button
+                                class="button button-primary"
+                                type="button"
+                                onclick="downloadZIP()"
+                            >
+                                Download ZIP
+                            </button>
+
+                        </div>
+
+                    </div>
+                `;
+
+            } catch (error) {
+
+                result.innerHTML =
+                    "<div class='err'>Unable to generate the hash. Please try again.</div>";
+
+                console.error(error);
+            }
+        }
+
+        /* COPY HASH */
+
+        async function copyHash() {
+
+            if (!currentHash) return;
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    currentHash
+                );
+
+                alert("Hash copied.");
+
+            } catch (err) {
+
+                alert("Copy failed.");
+            }
+        }
+
+        /* RESET */
+
+        function resetTool() {
+
+            currentHash = "";
+            currentContent = "";
+            currentFileName = "";
+            currentFile = null;
+
+            document.getElementById("text").value = "";
+            document.getElementById("file").value = "";
+            document.getElementById("filename").innerText = "";
+            document.getElementById("result").innerHTML = "";
+        }
+
+        /* ZIP EXPORT */
+
+        async function downloadZIP() {
+
+            if (!currentHash) {
+
+                alert("No hash generated.");
+                return;
+            }
+
+            const zip = new JSZip();
+
+            zip.file(
+                "sha3.txt",
+                currentHash
+            );
+
+            const manifest =
+`Algorithm: SHA3-256
+Filename: ${currentFileName}
+Hash: ${currentHash}
+Generated: ${new Date().toISOString()}
+`;
+
+            zip.file(
+                "manifest.txt",
+                manifest
+            );
+
+            if (currentFile) {
+
+                zip.file(
+                    currentFile.name,
+                    currentFile
+                );
+
+            } else {
+
+                zip.file(
+                    currentFileName,
+                    currentContent
+                );
+            }
+
+            const blob =
+                await zip.generateAsync({
+                    type: "blob"
+                });
+
+            const a =
+                document.createElement("a");
+
+            a.href =
+                URL.createObjectURL(blob);
+
+            a.download =
+                "sha3_bundle.zip";
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            document.body.removeChild(a);
+
+            setTimeout(() => {
+                URL.revokeObjectURL(a.href);
+            }, 1000);
+        }
+    </script>
+
+</body>
+      </html>
